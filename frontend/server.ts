@@ -8,6 +8,7 @@ const STATIC_FILES = new Map([
   ["/static/styles.css", ["styles.css", "text/css; charset=utf-8"]],
   ["/static/app.js", ["app.js", "text/javascript; charset=utf-8"]],
   ["/static/favicon.svg", ["favicon.svg", "image/svg+xml"]],
+  ["/static/brand/vers-wordmark.svg", ["brand/vers-wordmark.svg", "image/svg+xml"]],
 ]);
 
 class HttpError extends Error {

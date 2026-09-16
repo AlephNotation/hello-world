@@ -37,6 +37,7 @@ jobs:
           . ./.env
           set +a
           export TEST_DATABASE_URL="postgresql://guide:${APP_DB_PASSWORD}@127.0.0.1:15432/vers_guide?sslmode=disable"
+          export TEST_FRONTEND_IMAGE=hello-vers-frontend:dev
           bun test
           curl --fail --silent http://127.0.0.1:3002/health/ready
           curl --fail --silent http://127.0.0.1:3002/ > /dev/null
