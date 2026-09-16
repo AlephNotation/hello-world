@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#242421" />
+    <meta name="description" content="A hands-on introduction to Vers: one frontend, one PostgreSQL machine, and room to experiment." />
+    <title>Hello, Vers — a two-machine field guide</title>
+    <link rel="icon" type="image/svg+xml" href="/static/favicon.svg" />
+    <link rel="stylesheet" href="/static/styles.css" />
+    <script src="/static/app.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header page-width">
+      <a class="wordmark" href="#" aria-label="Vers field guide home"><svg viewBox="0 0 26 30" aria-hidden="true"><path d="M2 2h5v6H2zm17 0h5v6h-5zM6 9h5v6H6zm9 0h5v6h-5zM10 16h6v6h-6zm1 8h4v5h-4z" fill="currentColor" /></svg> VERS <span class="wordmark-divider"></span><span class="wordmark-caption">FIELD GUIDE</span></a>
+      <nav aria-label="Main navigation"><a href="#try-it">Try it</a><a href="#field-notes">Learn the primitives</a><a class="source-link" href="https://github.com/AlephNotation/hello-world" target="_blank" rel="noopener noreferrer">Source <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></nav>
+    </header>
+
+    <main id="main" class="page-width">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="square"></span> HELLO WORLD / 001</p>
+          <h1 id="hero-title">A little cloud.<br /><span>A lot of possibility.</span></h1>
+          <p class="hero-description">One frontend. One database. A real place to learn how to run, inspect, and branch machines with Vers.</p>
+          <a class="primary-link" href="#try-it">Leave your first mark <span aria-hidden="true">↘</span></a>
+        </div>
+        <div class="topology" aria-label="This application has two machines: a frontend connected to a PostgreSQL database.">
+          <div class="topology-caption"><span>YOUR TWO-MACHINE STACK</span><span class="topology-count">02</span></div>
+          <div class="machine-row">
+            <div class="machine">
+              <div class="hexagon frontend-hex"><svg viewBox="0 0 44 44" aria-hidden="true"><path d="M8 10h28v20H8zM17 35h10M22 30v5" /></svg></div>
+              <span class="machine-name">Frontend</span><span class="machine-meta">This page + API</span>
+            </div>
+            <div class="connection" aria-hidden="true"><span>SQL</span><svg viewBox="0 0 98 20"><path d="M2 10h85" /><path class="connection-arrow" d="m80 5 9 5-9 5" /></svg></div>
+            <div class="machine">
+              <div class="hexagon database-hex"><svg viewBox="0 0 44 44" aria-hidden="true"><ellipse cx="22" cy="11" rx="13" ry="5" /><path d="M9 11v21c0 3 6 5 13 5s13-2 13-5V11M9 21c0 3 6 5 13 5s13-2 13-5" /></svg></div>
+              <span class="machine-name">PostgreSQL</span><span class="machine-meta">Your persistent data</span>
+            </div>
+          </div>
+          <div class="topology-footer"><span class="small-square"></span> Independent machines. One working system.</div>
+        </div>
+      </section>
+
+      <section id="try-it" class="try-section" aria-labelledby="try-title">
+        <div class="section-heading"><div><p class="eyebrow">01 / MAKE IT REAL</p><h2 id="try-title">Leave a little proof.</h2></div><p>This isn’t a screenshot. Write a note,<br class="desktop-break" /> refresh the page, and find it still here.</p></div>
+        <div class="demo-layout">
+          <div class="notebook">
+            <div class="panel-heading"><span class="panel-label">THE SHARED NOTEBOOK</span><span id="note-count" class="count-label">— notes</span></div>
+            <form id="note-form" class="note-form">
+              <label for="note-body">What will you build?</label>
+              <textarea id="note-body" name="body" rows="3" maxlength="180" placeholder="A tiny idea is a good place to start…" aria-describedby="note-privacy note-feedback" required></textarea>
+              <div class="form-bottom"><span id="character-count" class="character-count" aria-hidden="true">0 / 180</span><button id="save-note" class="primary-button" type="submit">Save to Postgres <span aria-hidden="true">↗</span></button></div>
+              <p id="note-privacy" class="privacy-note">Shared with everyone who can access this stack. Keep secrets out.</p>
+              <p id="note-feedback" class="form-feedback" role="status" aria-live="polite"></p>
+            </form>
+            <div class="notes-heading"><span class="eyebrow">RECENT NOTES</span><span>Latest 8</span></div>
+            <div id="notes-empty" class="empty-state" role="status">Opening the notebook…</div>
+            <ul id="notes-list" class="notes-list" aria-label="Recent notes" hidden></ul>
+          </div>
+          <aside class="connection-panel" aria-labelledby="connection-title">
+            <p class="eyebrow">UNDER THE HOOD</p><h3 id="connection-title">Two machines.<br />One round trip.</h3><p class="connection-description">Your browser sends the note to this frontend. The frontend writes it to a separate PostgreSQL machine.</p>
+            <div class="health-box"><div class="health-title"><span id="database-indicator" class="status-dot status-pending"></span><span id="database-status" role="status" aria-live="polite">Checking connection</span></div><dl class="health-details"><div><dt>Database latency</dt><dd id="database-latency">—</dd></div><div><dt>Database instance</dt><dd id="database-instance">—</dd></div></dl><p id="connection-message" class="health-message">Checking that the database can answer a query.</p><button id="retry-connection" class="text-button" type="button" hidden>Try connection again <span aria-hidden="true">↻</span></button></div>
+            <p class="persistence-note"><span aria-hidden="true">↳</span> Reloading this page doesn’t erase your notes. The database holds onto them.</p>
+          </aside>
+        </div>
+      </section>
+
+      <section id="field-notes" class="guide-section" aria-labelledby="guide-title">
+        <div class="section-heading"><div><p class="eyebrow">02 / GET YOUR HANDS ON IT</p><h2 id="guide-title">Small commands. Big possibilities.</h2></div><a class="quiet-link" href="https://docs.vers.sh" target="_blank" rel="noopener noreferrer">Open the Vers docs <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></div>
+        <p class="guide-intro">Run these in your own terminal with the Vers CLI installed and authenticated. Set <code>VM_ID</code> to a machine ID from your stack. The buttons below only copy commands.</p>
+        <div class="guide-grid">
+          <article class="guide-card"><div class="guide-card-top"><span class="step-number">01</span><span class="guide-category">ORIENT</span></div><h3>Meet your machines.</h3><p>Find your frontend and database. On the Vers canvas, every VM is a live piece of your system.</p><div class="command"><code id="command-list">vers list --json</code><button class="copy-button" type="button" data-copy="command-list" aria-label="Copy list machines command"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 7h10v10H7zM3 13V3h10" /></svg></button></div></article>
+          <article class="guide-card"><div class="guide-card-top"><span class="step-number">02</span><span class="guide-category">INSPECT</span></div><h3>Take a look inside.</h3><p>Run a command on a machine. It’s a real computer, with its own processes, files, and operating system.</p><div class="command"><code id="command-exec">vers exec "$VM_ID" -- uname -a</code><button class="copy-button" type="button" data-copy="command-exec" aria-label="Copy inspect machine command"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 7h10v10H7zM3 13V3h10" /></svg></button></div></article>
+          <article class="guide-card"><div class="guide-card-top"><span class="step-number">03</span><span class="guide-category">BRANCH</span></div><h3>Try another direction.</h3><p>Fork a machine into two branches. Explore a change in each, with your starting machine still in place.</p><div class="command"><code id="command-fork">vers fork "$VM_ID" --count 2</code><button class="copy-button" type="button" data-copy="command-fork" aria-label="Copy fork machine command"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 7h10v10H7zM3 13V3h10" /></svg></button></div></article>
+          <article class="guide-card"><div class="guide-card-top"><span class="step-number">04</span><span class="guide-category">CHECKPOINT</span></div><h3>Keep a starting point.</h3><p>Save a machine’s state before an experiment. Use the current Vers CLI for checkpoint and restore commands.</p><div class="command"><code id="command-checkpoint">vers checkpoint "$VM_ID" --name before-change</code><button class="copy-button" type="button" data-copy="command-checkpoint" aria-label="Copy checkpoint machine command"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M7 7h10v10H7zM3 13V3h10" /></svg></button></div></article>
+        </div>
+        <div class="branch-note"><span class="branch-note-symbol" aria-hidden="true">⑂</span><div><h3>A branch of the frontend still talks to the same database.</h3><p>Want an isolated experiment? Branch the database too, then update the new frontend’s database connection. Branching one machine doesn’t automatically branch the whole stack.</p></div></div>
+        <p id="copy-feedback" class="sr-only" role="status" aria-live="polite"></p>
+      </section>
+      <section class="closing"><p class="eyebrow">03 / YOUR TURN</p><h2>Start small.<br />Make it your own.</h2><p>Change the page. Add a table. Branch an idea.<br />This repository is a starting point, and the machines are yours to explore.</p><a class="primary-link" href="https://github.com/AlephNotation/hello-world" target="_blank" rel="noopener noreferrer">Open the source <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></section>
+    </main>
+    <footer class="site-footer page-width"><span>BUILT ON VERS</span><span>Frontend + PostgreSQL · Hello world</span><a href="https://docs.vers.sh" target="_blank" rel="noopener noreferrer">Keep exploring <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></footer>
+    <noscript><p class="noscript-note">Enable JavaScript to check the database connection and save notes. You can still read the guide and copy its commands.</p></noscript>
+  </body>
+</html>

@@ -1,0 +1,42 @@
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: database/Dockerfile
+    image: hello-vers-postgres:dev
+    environment:
+      POSTGRES_DB: vers_guide
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Run ./scripts/setup.sh first}
+      APP_DB_PASSWORD: ${APP_DB_PASSWORD:?Run ./scripts/setup.sh first}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U postgres -d vers_guide"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    image: hello-vers-frontend:dev
+    environment:
+      DATABASE_URL: postgresql://guide:${APP_DB_PASSWORD:?Run ./scripts/setup.sh first}@postgres:5432/vers_guide?sslmode=disable
+    ports:
+      - "127.0.0.1:${FRONTEND_PORT:-3002}:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "bun", "-e", "const response = await fetch('http://127.0.0.1:8080/health/ready'); process.exit(response.ok ? 0 : 1)"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+      start_period: 10s
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

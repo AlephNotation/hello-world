@@ -1,0 +1,48 @@
+name: Check two-machine stack
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.3.14"
+      - name: Install locked dependencies
+        run: bun install --frozen-lockfile
+      - name: Check types
+        run: bun run check
+      - name: Initialize disposable stack
+        run: |
+          ./scripts/setup.sh
+          cat > "$RUNNER_TEMP/test-ports.yaml" <<'YAML'
+          services:
+            postgres:
+              ports:
+                - "127.0.0.1:15432:5432"
+          YAML
+          docker compose -f compose.yaml -f "$RUNNER_TEMP/test-ports.yaml" up --build -d --wait
+      - name: Test with Postgres
+        run: |
+          set -a
+          . ./.env
+          set +a
+          export TEST_DATABASE_URL="postgresql://guide:${APP_DB_PASSWORD}@127.0.0.1:15432/vers_guide?sslmode=disable"
+          bun test
+          curl --fail --silent http://127.0.0.1:3002/health/ready
+          curl --fail --silent http://127.0.0.1:3002/ > /dev/null
+      - name: Show service logs on failure
+        if: failure()
+        run: docker compose logs --tail 100
+      - name: Remove disposable stack
+        if: always()
+        run: if [ -f .env ]; then docker compose down --volumes; fi
