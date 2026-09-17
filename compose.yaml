@@ -25,6 +25,7 @@ services:
     image: hello-vers-frontend:dev
     environment:
       DATABASE_URL: postgresql://guide:${APP_DB_PASSWORD:?Run ./scripts/setup.sh first}@postgres:5432/vers_guide?sslmode=disable
+      VERS_CANVAS_ORIGIN: ${VERS_CANVAS_ORIGIN:-}
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-3002}:8080"
     depends_on:

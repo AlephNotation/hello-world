@@ -48,7 +48,19 @@ async function readNote(request: Request): Promise<string> {
   return body;
 }
 
-export function createApp(databaseUrl = process.env.DATABASE_URL) {
+export function createApp(
+  databaseUrl = process.env.DATABASE_URL,
+  canvasOrigin = process.env.VERS_CANVAS_ORIGIN,
+) {
+  const frameAncestors = ["'self'", "https://vers.sh", "https://www.vers.sh", "http://localhost:3000"];
+  if (canvasOrigin) {
+    const url = new URL(canvasOrigin);
+    if (!["http:", "https:"].includes(url.protocol) || url.origin !== canvasOrigin || url.hostname.includes("*")) {
+      throw new Error("VERS_CANVAS_ORIGIN must be an exact HTTP(S) origin without a path or credentials.");
+    }
+    frameAncestors.push(url.origin);
+  }
+  const contentSecurityPolicy = `default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; frame-ancestors ${frameAncestors.join(" ")}; form-action 'self'`;
   const pool = databaseUrl ? new Pool({
     connectionString: databaseUrl,
     max: 4,
@@ -131,7 +143,7 @@ export function createApp(databaseUrl = process.env.DATABASE_URL) {
       }
       response.headers.set("X-Content-Type-Options", "nosniff");
       response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-      response.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; frame-ancestors 'self' https://vers.sh https://www.vers.sh http://localhost:3000; form-action 'self'");
+      response.headers.set("Content-Security-Policy", contentSecurityPolicy);
       response.headers.set("Cache-Control", "no-store");
       return response;
     },

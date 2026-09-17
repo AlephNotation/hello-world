@@ -66,6 +66,27 @@ describe("guide availability and input validation", () => {
     },
   );
 
+  test("a configured canvas origin can embed the guide without broadening other policies", async () => {
+    const app = createApp(undefined, "http://inner-cloud.localhost:3010");
+    applications.push(app);
+    const policy = (await app.fetch(request("/"))).headers.get("content-security-policy");
+    expect(policy).toContain("frame-ancestors 'self' https://vers.sh https://www.vers.sh http://localhost:3000 http://inner-cloud.localhost:3010;");
+    expect(policy).toContain("script-src 'self';");
+    expect(policy).toContain("connect-src 'self';");
+  });
+
+  test.each([
+    "https://example.com/path",
+    "https://user:password@example.com",
+    "https://example.com?redirect=1",
+    "https://example.com#fragment",
+    "https://*.example.com",
+    "data:text/html,example",
+    "http://localhost:3010; script-src *",
+  ])("rejects a canvas setting that is not an exact HTTP(S) origin: %s", (origin) => {
+    expect(() => createApp(undefined, origin)).toThrow();
+  });
+
   test("an unreachable database does not expose connection credentials", async () => {
     const password = "must-not-appear-in-public-errors";
     const databaseUrl = `postgresql://guide:${password}@127.0.0.1:1/vers_guide`;
