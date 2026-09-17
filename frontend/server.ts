@@ -131,7 +131,7 @@ export function createApp(databaseUrl = process.env.DATABASE_URL) {
       }
       response.headers.set("X-Content-Type-Options", "nosniff");
       response.headers.set("Referrer-Policy", "strict-origin-when-cross-origin");
-      response.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'");
+      response.headers.set("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; base-uri 'none'; frame-ancestors 'self' https://vers.sh https://www.vers.sh http://localhost:3000; form-action 'self'");
       response.headers.set("Cache-Control", "no-store");
       return response;
     },

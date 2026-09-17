@@ -43,6 +43,9 @@ describe("guide availability and input validation", () => {
     const page = await app.fetch(request("/"));
     expect(page.status).toBe(200);
     expect(page.headers.get("content-type")).toStartWith("text/html");
+    const framePolicy = page.headers.get("content-security-policy")?.split(";")
+      .find((directive) => directive.trim().startsWith("frame-ancestors"))?.trim();
+    expect(framePolicy).toBe("frame-ancestors 'self' https://vers.sh https://www.vers.sh http://localhost:3000");
     expect(await page.text()).toContain("Vers");
     const health = await app.fetch(request("/health/live"));
     expect(health.status).toBe(200);
