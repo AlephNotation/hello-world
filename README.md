@@ -115,6 +115,14 @@ The frontend connects to Postgres using native PostgreSQL over the Vers TLS prox
 
 For a private development environment, configure its API endpoint **and** VM networking. The database hostname must resolve to that environment's proxy, and its certificate authority must be trusted by the frontend. Selecting a development API endpoint alone does not change DNS or certificate trust inside a VM.
 
+To embed the frontend in a canvas hosted at another origin, set `VERS_CANVAS_ORIGIN`
+on the frontend, for example `http://localhost:3010`. Use the canvas page's exact
+scheme, hostname, and port, without a path or trailing slash. This adds that origin
+to the page's framing policy; the default policy already allows `https://vers.sh`,
+`https://www.vers.sh`, and `http://localhost:3000`. Pass it with
+`--env VERS_CANVAS_ORIGIN` when launching the frontend VM, or set it in `.env` for
+Compose. The setting does not change the frontend's listening port.
+
 Check the deployed application's database connection:
 
 ```sh
